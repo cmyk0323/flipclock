@@ -1,28 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Timer</title>
     <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
     <style>
-        .tick { font-size: 5rem; } /* 大きさの調整 */
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* タイマー表示部分のサイズ */
+        .tick {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 入力フォームとボタンのスタイル */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .inputs input {
+            width: 60px;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: opacity 0.2s;
+        }
+
+        .start { background-color: #28a745; color: white; }
+        .stop { background-color: #dc3545; color: white; }
+        .reset { background-color: #6c757d; color: white; }
+        button:active { opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <div class="tick" data-did-init="handleTickInit">
+    <div class="tick" id="my-timer">
         <div data-repeat="true">
             <span data-view="flip"></span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="inputs">
+            <input type="number" id="h" placeholder="時" min="0" value="0">
+            <input type="number" id="m" placeholder="分" min="0" value="3">
+            <input type="number" id="s" placeholder="秒" min="0" value="0">
+        </div>
+        <div class="buttons">
+            <button class="start" onclick="startTimer()">スタート</button>
+            <button class="stop" onclick="stopTimer()">ストップ</button>
+            <button class="reset" onclick="resetTimer()">リセット</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
 
     <script>
-        function handleTickInit(tick) {
-            // 1秒ごとに時間を更新する魔法のコード
-            Tick.helper.interval(function() {
-                var d = new Date();
-                tick.value = [d.getHours(), d.getMinutes(), d.getSeconds()];
-            }, 1000);
+        let tickInstance;
+        let counter;
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            tickInstance = Tick.DOM.create(document.getElementById('my-timer'), {
+                value: '00:03:00' // 初期表示
+            });
+        });
+
+        // スタート
+        function startTimer() {
+            if (counter) counter.stop(); // 二重起動防止
+
+            // 入力値を取得
+            const h = parseInt(document.getElementById('h').value) || 0;
+            const m = parseInt(document.getElementById('m').value) || 0;
+            const s = parseInt(document.getElementById('s').value) || 0;
+            
+            // 秒数に変換
+            const totalSeconds = (h * 3600) + (m * 60) + s;
+
+            // カウントダウンの設定
+            counter = Tick.count.down(totalSeconds);
+
+            counter.onupdate = function(value) {
+                tickInstance.value = value;
+            };
+
+            counter.oncompletion = function() {
+                alert('時間になりました！');
+            };
+        }
+
+        // ストップ
+        function stopTimer() {
+            if (counter) counter.stop();
+        }
+
+        // リセット
+        function resetTimer() {
+            if (counter) counter.stop();
+            document.getElementById('h').value = 0;
+            document.getElementById('m').value = 3;
+            document.getElementById('s').value = 0;
+            tickInstance.value = '00:03:00';
         }
     </script>
 </body>
