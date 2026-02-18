@@ -1,241 +1,199 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flip Timer</title>
 
 <style>
-
-/* -----------------------
-   全体レイアウト
------------------------ */
-body {
-  margin: 0;
-  background: #111;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+body{
+  margin:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family:Arial, sans-serif;
+  color:white;
 }
 
-.container {
-  text-align: center;
+.container{
+  text-align:center;
 }
 
-/* -----------------------
-   フリップタイマー
------------------------ */
-
-/* 全体フリップコンテナ */
-.flip-group {
-  display: inline-flex;
-  gap: 10px;
-  margin-bottom: 40px;
+.flip-group{
+  display:flex;
+  gap:15px;
+  margin-bottom:40px;
 }
 
-/* 個別パーツ */
-.flip-card {
-  perspective: 1000px;
-  width: 70px;
-  height: 90px;
-  position: relative;
+.flip-card{
+  position:relative;
+  width:80px;
+  height:100px;
+  perspective:1000px;
 }
 
-.flip-card .top,
-.flip-card .bottom {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  line-height: 45px;
-  font-size: 4vw;
-  background: #222;
-  border-radius: 6px;
-  overflow: hidden;
-  backface-visibility: hidden;
+.card{
+  position:absolute;
+  width:100%;
+  height:100%;
 }
 
-.flip-card .top {
-  top: 0;
-  border-bottom: 1px solid #111;
+.top, .bottom{
+  position:absolute;
+  width:100%;
+  height:50%;
+  overflow:hidden;
+  background:#222;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:32px;
 }
 
-.flip-card .bottom {
-  bottom: 0;
-  border-top: 1px solid #111;
+.top{
+  top:0;
+  border-bottom:1px solid #000;
 }
 
-.flip-card .flip-top,
-.flip-card .flip-bottom {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  background: #222;
-  border-radius: 6px;
-  backface-visibility: hidden;
+.bottom{
+  bottom:0;
+  border-top:1px solid #000;
 }
 
-.flip-top {
-  top: 0;
-  transform-origin: bottom;
+.flip-top{
+  animation:flipTop 0.5s forwards;
+  transform-origin:bottom;
 }
 
-.flip-bottom {
-  bottom: 0;
-  transform-origin: top;
+.flip-bottom{
+  animation:flipBottom 0.5s forwards;
+  transform-origin:top;
 }
 
-/* アニメ */
-.flip-top.animate {
-  animation: flipTop 0.6s ease-in forwards;
+@keyframes flipTop{
+  0%{transform:rotateX(0deg);}
+  100%{transform:rotateX(-90deg);}
 }
 
-.flip-bottom.animate {
-  animation: flipBottom 0.6s ease-out forwards;
+@keyframes flipBottom{
+  0%{transform:rotateX(90deg);}
+  100%{transform:rotateX(0deg);}
 }
 
-@keyframes flipTop {
-  0%   { transform: rotateX(0deg); }
-  100% { transform: rotateX(-90deg); }
-}
-
-@keyframes flipBottom {
-  0%   { transform: rotateX(90deg); }
-  100% { transform: rotateX(0deg); }
-}
-
-/* -----------------------
-   ボタン
------------------------ */
-button {
-  margin: 8px;
-  padding: 10px 22px;
-  font-size: 18px;
-  background: #ff4d6d;
-  border: none;
-  border-radius: 30px;
-  color: white;
-  cursor: pointer;
-}
-
-select {
-  margin-bottom: 30px;
-  font-size: 18px;
+button{
+  margin:5px;
+  padding:10px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:25px;
+  background:#ff4d6d;
+  color:white;
 }
 </style>
-
 </head>
-<body>
 
+<body>
 <div class="container">
 
-  <!-- タイマー選択 -->
-  <select id="timeSelect">
-    <option value="900">15分</option>
-    <option value="1800">30分</option>
-    <option value="2700">45分</option>
-    <option value="3600">1時間</option>
-    <option value="5400">1時間30分</option>
-    <option value="7200">2時間</option>
-    <option value="9000">2時間30分</option>
-    <option value="10800">3時間</option>
-  </select>
+<select id="timeSelect">
+<option value="900">15分</option>
+<option value="1800">30分</option>
+<option value="2700">45分</option>
+<option value="3600">1時間</option>
+<option value="5400">1時間30分</option>
+<option value="7200">2時間</option>
+<option value="9000">2時間30分</option>
+<option value="10800">3時間</option>
+</select>
 
-  <!-- フリップ数字 -->
-  <div class="flip-group">
-    <div class="flip-card" id="hh"></div>
-    <div class="flip-card" id="mm"></div>
-    <div class="flip-card" id="ss"></div>
-  </div>
+<div class="flip-group">
+  <div class="flip-card" id="hh"></div>
+  <div class="flip-card" id="mm"></div>
+  <div class="flip-card" id="ss"></div>
+</div>
 
-  <!-- 操作 -->
-  <button onclick="startTimer()">Start</button>
-  <button onclick="stopTimer()">Stop</button>
-  <button onclick="resetTimer()">Reset</button>
+<button onclick="startTimer()">Start</button>
+<button onclick="stopTimer()">Stop</button>
+<button onclick="resetTimer()">Reset</button>
 
 </div>
 
 <script>
-
-// 現在の残り時間
 let totalSeconds = 0;
 let intervalID = null;
 
-// 初期表示
-resetTimer();
-
-// フリップ更新
-function updateFlipper(el, newVal) {
-  const topOld = el.querySelector('.top');
-  const bottomOld = el.querySelector('.bottom');
-
-  const flipTop = document.createElement('div');
-  flipTop.className = 'flip-top';
-  flipTop.textContent = newVal;
-
-  const flipBottom = document.createElement('div');
-  flipBottom.className = 'flip-bottom';
-  flipBottom.textContent = newVal;
-
-  el.innerHTML = '';
-  el.appendChild(flipTop);
-  el.appendChild(flipBottom);
-
-  setTimeout(() => {
-    flipTop.classList.add('animate');
-    flipBottom.classList.add('animate');
-  }, 10);
+function createStaticCard(el, value){
+  el.innerHTML = `
+    <div class="card">
+      <div class="top">${value}</div>
+      <div class="bottom">${value}</div>
+    </div>`;
 }
 
-// 数値を2桁文字列化
-function pad2(num) {
-  return String(num).padStart(2,'0');
+function flipTo(el, newValue){
+  const currentTop = el.querySelector('.top');
+  if(currentTop.textContent === newValue) return;
+
+  const topFlip = currentTop.cloneNode(true);
+  topFlip.textContent = currentTop.textContent;
+  topFlip.classList.add('flip-top');
+
+  const bottomFlip = document.createElement('div');
+  bottomFlip.className = 'bottom flip-bottom';
+  bottomFlip.textContent = newValue;
+
+  el.appendChild(topFlip);
+  el.appendChild(bottomFlip);
+
+  setTimeout(()=>{
+    createStaticCard(el, newValue);
+  },500);
 }
 
-// タイマー更新
-function tick() {
-  if (totalSeconds <= 0) {
-    stopTimer();
-    return;
-  }
+function pad(n){
+  return String(n).padStart(2,'0');
+}
 
-  totalSeconds--;
+function updateDisplay(){
   const h = Math.floor(totalSeconds/3600);
   const m = Math.floor((totalSeconds%3600)/60);
   const s = totalSeconds%60;
 
-  updateFlipper(document.getElementById('hh'), pad2(h));
-  updateFlipper(document.getElementById('mm'), pad2(m));
-  updateFlipper(document.getElementById('ss'), pad2(s));
+  flipTo(document.getElementById('hh'), pad(h));
+  flipTo(document.getElementById('mm'), pad(m));
+  flipTo(document.getElementById('ss'), pad(s));
 }
 
-// Start
-function startTimer() {
-  if (intervalID) return;
-  intervalID = setInterval(tick, 1000);
+function tick(){
+  if(totalSeconds<=0){
+    stopTimer();
+    return;
+  }
+  totalSeconds--;
+  updateDisplay();
 }
 
-// Stop
-function stopTimer() {
-  if (!intervalID) return;
+function startTimer(){
+  if(intervalID) return;
+  intervalID = setInterval(tick,1000);
+}
+
+function stopTimer(){
   clearInterval(intervalID);
   intervalID = null;
 }
 
-// Reset
-function resetTimer() {
+function resetTimer(){
   stopTimer();
   totalSeconds = Number(document.getElementById('timeSelect').value);
-  const h = Math.floor(totalSeconds/3600);
-  const m = Math.floor((totalSeconds%3600)/60);
-  const s = totalSeconds%60;
-  document.getElementById('hh').innerHTML = '<div class="top">'+pad2(h)+'</div><div class="bottom">'+pad2(h)+'</div>';
-  document.getElementById('mm').innerHTML = '<div class="top">'+pad2(m)+'</div><div class="bottom">'+pad2(m)+'</div>';
-  document.getElementById('ss').innerHTML = '<div class="top">'+pad2(s)+'</div><div class="bottom">'+pad2(s)+'</div>';
+  createStaticCard(document.getElementById('hh'), pad(Math.floor(totalSeconds/3600)));
+  createStaticCard(document.getElementById('mm'), pad(Math.floor((totalSeconds%3600)/60)));
+  createStaticCard(document.getElementById('ss'), pad(totalSeconds%60));
 }
 
+resetTimer();
 </script>
 
 </body>
