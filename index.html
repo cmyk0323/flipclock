@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flip Timer</title>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family:Arial, sans-serif;
+  color:white;
+}
+
+.container{
+  text-align:center;
+}
+
+.flip{
+  display:inline-block;
+  font-size:15vw;
+  background:#222;
+  padding:20px 30px;
+  border-radius:10px;
+  min-width:20vw;
+  transition:transform 0.2s;
+}
+
+.flip.animate{
+  transform:rotateX(90deg);
+}
+
+button{
+  margin-top:40px;
+  padding:12px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  background:#ff4d6d;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div id="timer" class="flip">01:00</div>
+  <br>
+  <button onclick="startTimer()">Start</button>
+</div>
+
+<script>
+let time = 60; // 60秒
+let interval;
+
+function updateDisplay(){
+  let minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  document.getElementById("timer").textContent =
+    String(minutes).padStart(2,"0") + ":" +
+    String(seconds).padStart(2,"0");
+}
+
+function startTimer(){
+  if(interval) return;
+
+  interval = setInterval(()=>{
+    if(time > 0){
+      time--;
+      flipAnimation();
+      updateDisplay();
+    } else {
+      clearInterval(interval);
+    }
+  },1000);
+}
+
+function flipAnimation(){
+  const el = document.getElementById("timer");
+  el.classList.add("animate");
+  setTimeout(()=>{
+    el.classList.remove("animate");
+  },200);
+}
+
+updateDisplay();
+</script>
+</body>
+</html>
