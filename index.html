@@ -1,226 +1,26 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>Flip Timer Stable</title>
-
-<style>
-body{
-  margin:0;
-  background:#111;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family:Arial;
-  color:white;
-}
-
-.container{
-  text-align:center;
-}
-
-.flip-group{
-  display:flex;
-  gap:20px;
-  margin:30px 0;
-}
-
-.flip{
-  position:relative;
-  width:90px;
-  height:110px;
-  perspective:1000px;
-}
-
-.static{
-  position:absolute;
-  width:100%;
-  height:100%;
-}
-
-.top,.bottom{
-  position:absolute;
-  width:100%;
-  height:50%;
-  background:#222;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:36px;
-  overflow:hidden;
-  backface-visibility:hidden;
-}
-
-.top{
-  top:0;
-  border-bottom:1px solid #000;
-}
-
-.bottom{
-  bottom:0;
-  border-top:1px solid #000;
-}
-
-.flip-top,
-.flip-bottom{
-  position:absolute;
-  width:100%;
-  height:50%;
-  background:#222;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:36px;
-  left:0;
-  backface-visibility:hidden;
-}
-
-.flip-top{
-  top:0;
-  transform-origin:bottom;
-  animation:flipTop .4s forwards;
-  border-bottom:1px solid #000;
-}
-
-.flip-bottom{
-  bottom:0;
-  transform-origin:top;
-  transform:rotateX(90deg);
-  animation:flipBottom .4s forwards;
-  border-top:1px solid #000;
-}
-
-@keyframes flipTop{
-  from{transform:rotateX(0deg);}
-  to{transform:rotateX(-90deg);}
-}
-
-@keyframes flipBottom{
-  from{transform:rotateX(90deg);}
-  to{transform:rotateX(0deg);}
-}
-
-button{
-  margin:5px;
-  padding:10px 20px;
-  font-size:16px;
-  border:none;
-  border-radius:25px;
-  background:#ff4d6d;
-  color:white;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Flip Clock</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-<div class="container">
-
-<select id="timeSelect">
-<option value="900">15分</option>
-<option value="1800">30分</option>
-<option value="2700">45分</option>
-<option value="3600">1時間</option>
-<option value="5400">1時間30分</option>
-<option value="7200">2時間</option>
-<option value="9000">2時間30分</option>
-<option value="10800">3時間</option>
-</select>
-
-<div class="flip-group">
-  <div class="flip" id="hh"></div>
-  <div class="flip" id="mm"></div>
-  <div class="flip" id="ss"></div>
-</div>
-
-<button onclick="startTimer()">Start</button>
-<button onclick="stopTimer()">Stop</button>
-<button onclick="resetTimer()">Reset</button>
-
-</div>
-
-<script>
-let totalSeconds=0;
-let interval=null;
-
-const hh=document.getElementById("hh");
-const mm=document.getElementById("mm");
-const ss=document.getElementById("ss");
-const timeSelect=document.getElementById("timeSelect");
-
-function pad(n){
-  return String(n).padStart(2,'0');
-}
-
-function createStatic(el,value){
-  el.innerHTML=`
-    <div class="static">
-      <div class="top">${value}</div>
-      <div class="bottom">${value}</div>
-    </div>`;
-}
-
-function flip(el,newValue){
-  const current=el.querySelector(".top").textContent;
-  if(current===newValue)return;
-
-  const topFlip=document.createElement("div");
-  topFlip.className="flip-top";
-  topFlip.textContent=current;
-
-  const bottomFlip=document.createElement("div");
-  bottomFlip.className="flip-bottom";
-  bottomFlip.textContent=newValue;
-
-  el.appendChild(topFlip);
-  el.appendChild(bottomFlip);
-
-  setTimeout(()=>{
-    createStatic(el,newValue);
-    topFlip.remove();
-    bottomFlip.remove();
-  },400);
-}
-
-function update(){
-  const h=Math.floor(totalSeconds/3600);
-  const m=Math.floor((totalSeconds%3600)/60);
-  const s=totalSeconds%60;
-
-  flip(hh,pad(h));
-  flip(mm,pad(m));
-  flip(ss,pad(s));
-}
-
-function tick(){
-  if(totalSeconds<=0){
-    stopTimer();
-    return;
-  }
-  totalSeconds--;
-  update();
-}
-
-function startTimer(){
-  if(interval)return;
-  interval=setInterval(tick,1000);
-}
-
-function stopTimer(){
-  clearInterval(interval);
-  interval=null;
-}
-
-function resetTimer(){
-  stopTimer();
-  totalSeconds=Number(timeSelect.value);
-  createStatic(hh,pad(Math.floor(totalSeconds/3600)));
-  createStatic(mm,pad(Math.floor((totalSeconds%3600)/60)));
-  createStatic(ss,pad(totalSeconds%60));
-}
-
-resetTimer();
-</script>
-
+    <div class="clock">
+        <div class="flip-card" id="hours">
+            <div class="top">00</div>
+            <div class="bottom">00</div>
+        </div>
+        <div class="flip-card" id="minutes">
+            <div class="top">00</div>
+            <div class="bottom">00</div>
+        </div>
+        <div class="flip-card" id="seconds">
+            <div class="top">00</div>
+            <div class="bottom">00</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
