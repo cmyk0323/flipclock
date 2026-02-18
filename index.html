@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Flip Clock</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet">
+    <style>
+        .tick { font-size: 5rem; } /* 大きさの調整 */
+    </style>
 </head>
 <body>
-    <div class="clock">
-        <div class="flip-card" id="hours">
-            <div class="top">00</div>
-            <div class="bottom">00</div>
-        </div>
-        <div class="flip-card" id="minutes">
-            <div class="top">00</div>
-            <div class="bottom">00</div>
-        </div>
-        <div class="flip-card" id="seconds">
-            <div class="top">00</div>
-            <div class="bottom">00</div>
+
+    <div class="tick" data-did-init="handleTickInit">
+        <div data-repeat="true">
+            <span data-view="flip"></span>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
+
+    <script>
+        function handleTickInit(tick) {
+            // 1秒ごとに時間を更新する魔法のコード
+            Tick.helper.interval(function() {
+                var d = new Date();
+                tick.value = [d.getHours(), d.getMinutes(), d.getSeconds()];
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
