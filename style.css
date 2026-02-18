@@ -1,0 +1,60 @@
+body {
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.clock {
+    display: flex;
+    gap: 15px;
+}
+
+.flip-card {
+    position: relative;
+    width: 80px;
+    height: 120px;
+    background-color: #333;
+    border-radius: 8px;
+    font-size: 60px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    line-height: 120px;
+}
+
+/* 上半分と下半分の装飾 */
+.top, .bottom {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    background-color: #333;
+    left: 0;
+}
+
+.top {
+    top: 0;
+    border-bottom: 1px solid rgba(0,0,0,0.5);
+    border-radius: 8px 8px 0 0;
+    line-height: 120px; /* 全体の高さに合わせる */
+}
+
+.bottom {
+    bottom: 0;
+    line-height: 0; /* 下半分は文字の上が隠れるように */
+    border-radius: 0 0 8px 8px;
+}
+
+/* アニメーション用のクラス（JavaScriptで切り替え） */
+.flip {
+    animation: flip-anim 0.6s ease-in;
+}
+
+@keyframes flip-anim {
+    0% { transform: rotateX(0deg); }
+    100% { transform: rotateX(-360deg); }
+}
